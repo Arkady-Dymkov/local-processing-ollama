@@ -54,6 +54,14 @@ interface OllamaResponse {
 	done: boolean;
 }
 
+interface OllamaModelInfo {
+	parameters: {
+		context_length: number;
+		[key: string]: any;
+	};
+	[key: string]: any;
+}
+
 class OllamaService {
 	private readonly baseUrl: string;
 
@@ -75,8 +83,50 @@ class OllamaService {
 		}
 	}
 
+	async getModelInfo(model: string): Promise<OllamaModelInfo> {
+		try {
+			const response = await fetch(`${this.baseUrl}/api/show`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					name: model
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to fetch model info: ${response.statusText}`);
+			}
+
+			const data = await response.json() as OllamaModelInfo;
+			return data;
+		} catch (error) {
+			console.error(`Error fetching info for model ${model}:`, error);
+			throw error;
+		}
+	}
+
+ // Simple token count estimation - roughly 4 characters per token
+	estimateTokenCount(text: string): number {
+		return Math.ceil(text.length / 4);
+	}
+
 	async generateText(model: string, prompt: string, systemPrompt: string): Promise<string> {
 		try {
+			// Get model info to check context window size
+			const modelInfo = await this.getModelInfo(model);
+			const contextLength = modelInfo.parameters.context_length;
+
+			// Estimate token count for prompt and system prompt
+			const combinedText = prompt + (systemPrompt ? "\n" + systemPrompt : "");
+			const estimatedTokens = this.estimateTokenCount(combinedText);
+
+			// Check if estimated tokens exceed context window
+			if (estimatedTokens >= contextLength) {
+				throw new Error(`Input exceeds model's context window (${estimatedTokens} tokens > ${contextLength} tokens). Please reduce the size of your input.`);
+			}
+
 			const response = await fetch(`${this.baseUrl}/api/generate`, {
 				method: 'POST',
 				headers: {

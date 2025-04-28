@@ -1,10 +1,10 @@
 {
 	"id": "ollama-transcript-processor",
-	"name": "Ollama Transcript Processor",
+	"name": "Ollama Notes Processor",
 	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Process meeting transcripts with locally running Ollama language models to generate concise notes.",
-	"author": "Your Name",
+	"description": "Process text with locally running Ollama language models",
+	"author": "Arkadiy Dymkov-Weinstein",
 	"authorUrl": "https://github.com/yourusername",
 	"isDesktopOnly": true
 }
