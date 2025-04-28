@@ -132,6 +132,23 @@ npm install
 npm run build
 ```
 
+### Releasing
+
+This project uses GitHub Actions to automatically create releases when a tag starting with 'v' is pushed to the repository.
+
+To create a new release:
+
+1. Update the version number in `manifest.json`
+2. Commit the changes
+3. Create and push a new tag with the version number:
+
+```bash
+git tag v1.3.1
+git push origin v1.3.1
+```
+
+GitHub Actions will automatically build the plugin and create a release with the necessary files.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
