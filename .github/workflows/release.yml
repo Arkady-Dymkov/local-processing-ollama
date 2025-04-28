@@ -35,12 +35,6 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Create folder and copy files
-        run: |
-          mkdir -p ollama-transcript-processor
-          cp main.js manifest.json styles.css versions.json ollama-transcript-processor/
-          zip -r ollama-transcript-processor.zip ollama-transcript-processor
-
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -49,4 +43,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            ollama-transcript-processor.zip
+            main.js
+            manifest.json
+            styles.css
