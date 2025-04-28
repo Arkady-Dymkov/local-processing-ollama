@@ -1,8 +1,61 @@
-/*
+/* Ollama Transcript Processor Styles */
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+/* Prompt Selection Modal */
+.prompt-buttons {
+  display: flex;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  gap: 8px;
+}
 
-If your plugin does not need CSS, delete this file.
+/* Settings Tab */
+.prompts-container {
+  margin-bottom: 20px;
+}
 
-*/
+.prompts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.prompts-table th,
+.prompts-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.prompts-table th {
+  font-weight: bold;
+  background-color: var(--background-secondary);
+}
+
+.prompt-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.import-export-container {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+/* Prompt Edit Modal */
+.prompt-edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* TextArea Component */
+.setting-item textarea {
+  width: 100%;
+  min-height: 150px;
+  font-family: var(--font-monospace);
+  resize: vertical;
+}
