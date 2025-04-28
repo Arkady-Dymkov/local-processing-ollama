@@ -259,9 +259,9 @@ export default class OllamaTranscriptProcessor extends Plugin {
 			// Prepare the prompt with the transcript
 			const fullPrompt = `${prompt.body}
 			\n
-			====TRANSCRIPT_BEGIN====\n
+			====TEXT_BEGIN====\n
 			${noteText}
-			====TRANSCRIPT_END====
+			====TEXT_END====
 			`;
 
 			// Call Ollama API
@@ -467,7 +467,7 @@ class PromptEditModal extends Modal {
 		// Body input
 		contentEl.createEl("h3", {text: "Prompt Body"});
 		contentEl.createEl("p", {
-			text: "Write your specific instructions for the AI model. The transcript will be appended after this prompt. Text will be placed automatically between `====TRANSCRIPT_BEGIN====` and `====TRANSCRIPT_END====`. You may reference them in your prompt.",
+			text: "Write your specific instructions for the AI model. The transcript will be appended after this prompt. Text will be placed automatically between `====TEXT_BEGIN====` and `====TEXT_END====`. You may reference them in your prompt.",
 			cls: "setting-item-description"
 		});
 
