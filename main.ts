@@ -61,6 +61,7 @@ interface OllamaModelInfo {
 		context_length: number;
 		[key: string]: any;
 	};
+
 	[key: string]: any;
 }
 
@@ -109,7 +110,7 @@ class OllamaService {
 		}
 	}
 
- // Simple token count estimation - roughly 4 characters per token
+	// Simple token count estimation - roughly 4 characters per token
 	estimateTokenCount(text: string): number {
 		return Math.ceil(text.length / 4);
 	}
@@ -256,7 +257,12 @@ export default class OllamaTranscriptProcessor extends Plugin {
 
 		try {
 			// Prepare the prompt with the transcript
-			const fullPrompt = `${prompt.body}\n\n### TRANSCRIPT\n${noteText}`;
+			const fullPrompt = `${prompt.body}
+			\n
+			====TRANSCRIPT_BEGIN====\n
+			${noteText}
+			====TRANSCRIPT_END====
+			`;
 
 			// Call Ollama API
 			const response = await this.ollamaService.generateText(
@@ -338,7 +344,7 @@ class PromptSelectionModal extends FuzzySuggestModal<Prompt> {
 		super.renderSuggestion(item, el);
 
 		// Add buttons for edit and delete
-		const buttonsContainer = el.createDiv({ cls: "prompt-buttons" });
+		const buttonsContainer = el.createDiv({cls: "prompt-buttons"});
 
 		const editButton = new ExtraButtonComponent(buttonsContainer)
 			.setIcon("pencil")
@@ -378,7 +384,7 @@ class PromptSelectionModal extends FuzzySuggestModal<Prompt> {
 		super.onOpen();
 
 		// Add a button to create a new prompt
-		const { contentEl } = this;
+		const {contentEl} = this;
 		const newPromptButton = new ButtonComponent(contentEl)
 			.setButtonText("New Prompt")
 			.onClick(() => {
@@ -425,7 +431,7 @@ class PromptEditModal extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 
-		contentEl.createEl("h2", { text: this.prompt.id ? "Edit Prompt" : "Create Prompt" });
+		contentEl.createEl("h2", {text: this.prompt.id ? "Edit Prompt" : "Create Prompt"});
 
 		// Name input
 		new Setting(contentEl)
@@ -440,8 +446,8 @@ class PromptEditModal extends Modal {
 			});
 
 		// System Prompt input
-		contentEl.createEl("h3", { text: "System Instruction" });
-		contentEl.createEl("p", { 
+		contentEl.createEl("h3", {text: "System Instruction"});
+		contentEl.createEl("p", {
 			text: "Define the AI's role and general behavior. This is sent as the system instruction to the model.",
 			cls: "setting-item-description"
 		});
@@ -459,9 +465,9 @@ class PromptEditModal extends Modal {
 		this.systemPromptInput.inputEl.style.minHeight = "100px";
 
 		// Body input
-		contentEl.createEl("h3", { text: "Prompt Body" });
-		contentEl.createEl("p", { 
-			text: "Write your specific instructions for the AI model. The transcript will be appended after this prompt.",
+		contentEl.createEl("h3", {text: "Prompt Body"});
+		contentEl.createEl("p", {
+			text: "Write your specific instructions for the AI model. The transcript will be appended after this prompt. Text will be placed automatically between `====TRANSCRIPT_BEGIN====` and `====TRANSCRIPT_END====`. You may reference them in your prompt.",
 			cls: "setting-item-description"
 		});
 
@@ -478,7 +484,7 @@ class PromptEditModal extends Modal {
 		this.bodyInput.inputEl.style.minHeight = "200px";
 
 		// Buttons
-		const buttonContainer = contentEl.createDiv({ cls: "prompt-edit-buttons" });
+		const buttonContainer = contentEl.createDiv({cls: "prompt-edit-buttons"});
 
 		new ButtonComponent(buttonContainer)
 			.setButtonText("Cancel")
@@ -603,7 +609,7 @@ class OllamaSettingTab extends PluginSettingTab {
 		containerEl.createEl('h3', {text: 'Prompt Management'});
 
 		// Display existing prompts
-		const promptsContainer = containerEl.createDiv({ cls: 'prompts-container' });
+		const promptsContainer = containerEl.createDiv({cls: 'prompts-container'});
 		this.renderPromptsList(promptsContainer);
 
 		// Add button for creating a new prompt
@@ -625,7 +631,7 @@ class OllamaSettingTab extends PluginSettingTab {
 				}));
 
 		// Import/Export buttons
-		const importExportContainer = containerEl.createDiv({ cls: 'import-export-container' });
+		const importExportContainer = containerEl.createDiv({cls: 'import-export-container'});
 
 		new Setting(importExportContainer)
 			.setName('Import/Export Prompts')
@@ -646,25 +652,25 @@ class OllamaSettingTab extends PluginSettingTab {
 		container.empty();
 
 		if (this.plugin.settings.prompts.length === 0) {
-			container.createEl('p', { text: 'No prompts created yet. Click "Add New Prompt" to create one.' });
+			container.createEl('p', {text: 'No prompts created yet. Click "Add New Prompt" to create one.'});
 			return;
 		}
 
 		// Create a table for prompts
-		const table = container.createEl('table', { cls: 'prompts-table' });
+		const table = container.createEl('table', {cls: 'prompts-table'});
 		const thead = table.createEl('thead');
 		const headerRow = thead.createEl('tr');
-		headerRow.createEl('th', { text: 'Name' });
-		headerRow.createEl('th', { text: 'Actions' });
+		headerRow.createEl('th', {text: 'Name'});
+		headerRow.createEl('th', {text: 'Actions'});
 
 		const tbody = table.createEl('tbody');
 
 		this.plugin.settings.prompts.forEach(prompt => {
 			const row = tbody.createEl('tr');
-			row.createEl('td', { text: prompt.name });
+			row.createEl('td', {text: prompt.name});
 
 			const actionsCell = row.createEl('td');
-			const actionsContainer = actionsCell.createDiv({ cls: 'prompt-actions' });
+			const actionsContainer = actionsCell.createDiv({cls: 'prompt-actions'});
 
 			// Edit button
 			const editButton = new ButtonComponent(actionsContainer)
@@ -708,7 +714,7 @@ class OllamaSettingTab extends PluginSettingTab {
 
 	private exportPrompts(): void {
 		const promptsJson = JSON.stringify(this.plugin.settings.prompts, null, 2);
-		const blob = new Blob([promptsJson], { type: 'application/json' });
+		const blob = new Blob([promptsJson], {type: 'application/json'});
 		const url = URL.createObjectURL(blob);
 
 		const a = document.createElement('a');

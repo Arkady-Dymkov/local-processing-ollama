@@ -2,7 +2,7 @@
 
 # Variables
 PLUGIN_ID := ollama-transcript-processor
-TARGET_DIR := $HOME/obs/Personal/.obsidian/plugins/$(PLUGIN_ID)
+TARGET_DIR := $(HOME)/obs/Personal/.obsidian/plugins/$(PLUGIN_ID)
 
 # Default target
 .PHONY: all
