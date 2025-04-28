@@ -386,12 +386,12 @@ class PromptSelectionModal extends FuzzySuggestModal<Prompt> {
 		// Add a button to create a new prompt
 		const {contentEl} = this;
 		const newPromptButton = new ButtonComponent(contentEl)
-			.setButtonText("New Prompt")
+   .setButtonText("New prompt")
 			.onClick(() => {
 				this.close();
 				const newPrompt: Prompt = {
 					id: Date.now().toString(),
-					name: "New Prompt",
+					name: "New prompt",
 					body: ""
 				};
 				new PromptEditModal(this.app, this.plugin, newPrompt, (createdPrompt) => {
@@ -403,9 +403,8 @@ class PromptSelectionModal extends FuzzySuggestModal<Prompt> {
 				}).open();
 			});
 
-		// Style the button
-		newPromptButton.buttonEl.style.marginTop = "8px";
-		newPromptButton.buttonEl.style.width = "100%";
+		// Add CSS class to the button
+		newPromptButton.buttonEl.addClass("new-prompt-button");
 	}
 }
 
@@ -431,7 +430,7 @@ class PromptEditModal extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 
-		contentEl.createEl("h2", {text: this.prompt.id ? "Edit Prompt" : "Create Prompt"});
+		new Setting(contentEl).setName(this.prompt.id ? "Edit prompt" : "Create prompt").setHeading();
 
 		// Name input
 		new Setting(contentEl)
@@ -446,7 +445,7 @@ class PromptEditModal extends Modal {
 			});
 
 		// System Prompt input
-		contentEl.createEl("h3", {text: "System Instruction"});
+		new Setting(contentEl).setName("System instruction").setHeading();
 		contentEl.createEl("p", {
 			text: "Define the AI's role and general behavior. This is sent as the system instruction to the model.",
 			cls: "setting-item-description"
@@ -459,13 +458,11 @@ class PromptEditModal extends Modal {
 				this.prompt.systemPrompt = value;
 			});
 
-		// Style the system prompt textarea
-		this.systemPromptInput.inputEl.style.width = "100%";
-		this.systemPromptInput.inputEl.style.height = "100px";
-		this.systemPromptInput.inputEl.style.minHeight = "100px";
+		// Add CSS class to the system prompt textarea
+		this.systemPromptInput.inputEl.addClass("system-prompt-input");
 
 		// Body input
-		contentEl.createEl("h3", {text: "Prompt Body"});
+		new Setting(contentEl).setName("Prompt body").setHeading();
 		contentEl.createEl("p", {
 			text: "Write your specific instructions for the AI model. The transcript will be appended after this prompt. Text will be placed automatically between `====TEXT_BEGIN====` and `====TEXT_END====`. You may reference them in your prompt.",
 			cls: "setting-item-description"
@@ -478,10 +475,8 @@ class PromptEditModal extends Modal {
 				this.prompt.body = value;
 			});
 
-		// Style the textarea
-		this.bodyInput.inputEl.style.width = "100%";
-		this.bodyInput.inputEl.style.height = "200px";
-		this.bodyInput.inputEl.style.minHeight = "200px";
+		// Add CSS class to the textarea
+		this.bodyInput.inputEl.addClass("prompt-body-input");
 
 		// Buttons
 		const buttonContainer = contentEl.createDiv({cls: "prompt-edit-buttons"});
@@ -512,11 +507,7 @@ class PromptEditModal extends Modal {
 				this.close();
 			});
 
-		// Style the button container
-		buttonContainer.style.display = "flex";
-		buttonContainer.style.justifyContent = "flex-end";
-		buttonContainer.style.gap = "8px";
-		buttonContainer.style.marginTop = "16px";
+		// We're already using a CSS class for the button container (prompt-edit-buttons)
 	}
 
 	onClose() {
@@ -538,10 +529,10 @@ class OllamaSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Ollama Transcript Processor Settings'});
+		new Setting(containerEl).setName('Ollama Transcript Processor Settings').setHeading();
 
 		// Ollama Connection Settings
-		containerEl.createEl('h3', {text: 'Ollama Connection'});
+		new Setting(containerEl).setName('Ollama Connection').setHeading();
 
 		new Setting(containerEl)
 			.setName('Ollama Host')
@@ -559,7 +550,7 @@ class OllamaSettingTab extends PluginSettingTab {
 				}));
 
 		// Model Settings
-		containerEl.createEl('h3', {text: 'Model Settings'});
+		new Setting(containerEl).setName('Model Settings').setHeading();
 
 		const modelSetting = new Setting(containerEl)
 			.setName('Default Model')
@@ -606,7 +597,7 @@ class OllamaSettingTab extends PluginSettingTab {
 		}
 
 		// Prompt Management
-		containerEl.createEl('h3', {text: 'Prompt Management'});
+		new Setting(containerEl).setName('Prompt Management').setHeading();
 
 		// Display existing prompts
 		const promptsContainer = containerEl.createDiv({cls: 'prompts-container'});
@@ -615,12 +606,12 @@ class OllamaSettingTab extends PluginSettingTab {
 		// Add button for creating a new prompt
 		new Setting(containerEl)
 			.addButton(button => button
-				.setButtonText('Add New Prompt')
+    .setButtonText('Add new prompt')
 				.setCta()
 				.onClick(() => {
 					const newPrompt: Prompt = {
 						id: Date.now().toString(),
-						name: "New Prompt",
+						name: "New prompt",
 						body: ""
 					};
 					new PromptEditModal(this.app, this.plugin, newPrompt, (createdPrompt) => {
@@ -652,7 +643,7 @@ class OllamaSettingTab extends PluginSettingTab {
 		container.empty();
 
 		if (this.plugin.settings.prompts.length === 0) {
-			container.createEl('p', {text: 'No prompts created yet. Click "Add New Prompt" to create one.'});
+			container.createEl('p', {text: 'No prompts created yet. Click "Add new prompt" to create one.'});
 			return;
 		}
 
@@ -697,9 +688,8 @@ class OllamaSettingTab extends PluginSettingTab {
 					}
 				});
 
-			// Style the buttons
-			actionsContainer.style.display = 'flex';
-			actionsContainer.style.gap = '8px';
+			// Add CSS class to the actions container
+			actionsContainer.addClass('actions-container');
 		});
 	}
 

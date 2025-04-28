@@ -54,8 +54,42 @@
 
 /* TextArea Component */
 .setting-item textarea {
-  width: 100%;
-  min-height: 150px;
-  font-family: var(--font-monospace);
-  resize: vertical;
+	width: 100%;
+	min-height: 150px;
+	font-family: var(--font-monospace);
+	resize: vertical;
+}
+
+/* New Prompt Button */
+.new-prompt-button {
+	margin-top: 8px;
+	width: 100%;
+}
+
+/* System Prompt Input */
+.system-prompt-input {
+	width: 100%;
+	height: 100px;
+	min-height: 100px;
+}
+
+/* Prompt Body Input */
+.prompt-body-input {
+	width: 100%;
+	height: 200px;
+	min-height: 200px;
+}
+
+/* Button Container */
+.button-container {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+/* Actions Container */
+.actions-container {
+	display: flex;
+	gap: 8px;
 }
