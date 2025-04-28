@@ -6,6 +6,7 @@ This plugin allows you to process meeting transcripts with locally running Ollam
 
 - Process meeting transcripts with locally running language models via Ollama
 - Select from multiple saved prompts or create your own
+- Define separate system instructions for each prompt
 - Customize the default model and Ollama connection settings
 - Import and export prompts for sharing or backup
 - Preserve original transcript in a collapsible block
@@ -72,6 +73,11 @@ You can manage your prompts in the plugin settings:
    - Edit existing prompts
    - Delete prompts
    - Import/export prompts as JSON
+
+Each prompt consists of:
+- **Name**: A short, descriptive name for the prompt
+- **System Instruction**: Defines the AI's role and general behavior (e.g., "You are a professional note-taker")
+- **Prompt Body**: Specific instructions for processing the transcript
 
 ### Configuring Ollama Connection
 

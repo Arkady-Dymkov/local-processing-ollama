@@ -19,6 +19,7 @@ interface Prompt {
 	id: string;
 	name: string;
 	body: string;
+	systemPrompt?: string;
 }
 
 interface OllamaTranscriptProcessorSettings {
@@ -33,7 +34,8 @@ const DEFAULT_SETTINGS: OllamaTranscriptProcessorSettings = {
 		{
 			id: 'default',
 			name: 'Summarize Meeting',
-			body: 'You are a professional note-taker. Create concise, well-structured notes from the following meeting transcript. Include key points, decisions, action items, and important details. Organize the information logically with clear headings.'
+			body: 'Create concise, well-structured notes from the following meeting transcript. Include key points, decisions, action items, and important details. Organize the information logically with clear headings.',
+			systemPrompt: 'You are a professional note-taker with expertise in creating clear, organized summaries of meetings.'
 		}
 	],
 	defaultModel: 'gemma:3b',
@@ -260,7 +262,7 @@ export default class OllamaTranscriptProcessor extends Plugin {
 			const response = await this.ollamaService.generateText(
 				this.settings.defaultModel,
 				fullPrompt,
-				""  // No system prompt for now
+				prompt.systemPrompt || ""  // Use the prompt's system instruction
 			);
 
 			// Format the note with the AI response
@@ -407,11 +409,15 @@ class PromptEditModal extends Modal {
 	onSave: (prompt: Prompt) => void;
 	nameInput: TextComponent;
 	bodyInput: TextAreaComponent;
+	systemPromptInput: TextAreaComponent;
 
 	constructor(app: App, plugin: OllamaTranscriptProcessor, prompt: Prompt, onSave: (prompt: Prompt) => void) {
 		super(app);
 		this.plugin = plugin;
 		this.prompt = {...prompt}; // Clone to avoid modifying the original
+		if (!this.prompt.systemPrompt) {
+			this.prompt.systemPrompt = ""; // Initialize if not present
+		}
 		this.onSave = onSave;
 	}
 
@@ -433,10 +439,29 @@ class PromptEditModal extends Modal {
 					});
 			});
 
+		// System Prompt input
+		contentEl.createEl("h3", { text: "System Instruction" });
+		contentEl.createEl("p", { 
+			text: "Define the AI's role and general behavior. This is sent as the system instruction to the model.",
+			cls: "setting-item-description"
+		});
+
+		const systemPromptContainer = contentEl.createDiv();
+		this.systemPromptInput = new TextAreaComponent(systemPromptContainer)
+			.setValue(this.prompt.systemPrompt || "")
+			.onChange(value => {
+				this.prompt.systemPrompt = value;
+			});
+
+		// Style the system prompt textarea
+		this.systemPromptInput.inputEl.style.width = "100%";
+		this.systemPromptInput.inputEl.style.height = "100px";
+		this.systemPromptInput.inputEl.style.minHeight = "100px";
+
 		// Body input
 		contentEl.createEl("h3", { text: "Prompt Body" });
 		contentEl.createEl("p", { 
-			text: "Write your instructions for the AI model. The transcript will be appended after this prompt.",
+			text: "Write your specific instructions for the AI model. The transcript will be appended after this prompt.",
 			cls: "setting-item-description"
 		});
 
@@ -474,6 +499,8 @@ class PromptEditModal extends Modal {
 					new Notice("Prompt body cannot be empty");
 					return;
 				}
+
+				// systemPrompt is optional, so no validation needed
 
 				this.onSave(this.prompt);
 				this.close();
